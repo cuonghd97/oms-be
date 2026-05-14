@@ -204,6 +204,10 @@ This project is for educational and portfolio purposes.
 2. push project lên github
 3. set up github action
 4. đặt biến repo secret
+5. cài github runner
+6. chạy lệnh sau để chạy runner background
+sudo ./svc.sh install
+sudo ./svc.sh start
 
 note: 
 Việc build code và push lên Docker Hub hoàn toàn được thực hiện trên các máy chủ (server) miễn phí của GitHub,
