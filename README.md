@@ -209,6 +209,19 @@ This project is for educational and portfolio purposes.
 sudo ./svc.sh install
 sudo ./svc.sh start
 
-note: 
-Việc build code và push lên Docker Hub hoàn toàn được thực hiện trên các máy chủ (server) miễn phí của GitHub,
-Task: cần cấu hình github runner để chạy build; pull; push lên docker hub trên vps
+Bước 1: Chuẩn bị môi trường trên VPS mới
+
+Tạo user non-root (ví dụ: cuong).
+Cài đặt Docker và Docker-compose lên VPS.
+Cấp quyền Docker cho user: sudo usermod -aG docker cuong.
+Copy file docker-compose.yml sang VPS mới và gõ lệnh để dựng lại hạ tầng DB/Redis: docker-compose up -d postgres redis zookeeper kafka (Lưu ý: Nếu cần dữ liệu cũ, bạn phải sao lưu (dump) database từ VPS cũ rồi import sang VPS mới).
+Bước 2: Kết nối VPS mới với GitHub
+
+Lên trang web GitHub của dự án -> Settings > Actions > Runners.
+Xóa Runner cũ đi (cho đỡ rối).
+Bấm New self-hosted runner để lấy Token mới.
+Lên Terminal của VPS mới, làm lại đúng 4 bước tải, ./config.sh và cài ./svc.sh giống hệt như bạn vừa làm hôm nay.
+Bước 3: Tận hưởng (Không cần sửa code hay Secret)
+
+Nhờ việc chúng ta đã setup hệ thống gọi nhau bằng tên nội bộ (DB_HOST=postgres, REDIS_HOST=redis), nên khi sang VPS mới bạn KHÔNG CẦN phải đổi bất kỳ Secret nào trên Github cả! Mọi thứ vẫn nguyên vẹn.
+Bạn chỉ cần push một commit mới, hoặc bấm Re-run pipeline, VPS mới sẽ tự động kéo code, tự build Image và tự chạy một cách hoàn hảo.
