@@ -119,7 +119,8 @@ jobs:
             docker run -d \
               --name "$CONTAINER_NAME" \
               --restart unless-stopped \
-              --network host \
+              --network oms_network \
+              -p 8080:8080 \
               -e SPRING_PROFILES_ACTIVE=prod \
               -e DB_HOST="${{ secrets.DB_HOST }}" \
               -e DB_PORT="${{ secrets.DB_PORT }}" \

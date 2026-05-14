@@ -12,6 +12,8 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - oms_network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U oms_user -d oms_db"]
       interval: 10s
@@ -23,6 +25,8 @@ services:
     container_name: oms-redis
     ports:
       - "6379:6379"
+    networks:
+      - oms_network
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -37,6 +41,8 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
     ports:
       - "2181:2181"
+    networks:
+      - oms_network
 
   kafka:
     image: confluentinc/cp-kafka:7.6.0
@@ -48,7 +54,7 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://127.0.0.1:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
@@ -58,32 +64,13 @@ services:
       interval: 15s
       timeout: 10s
       retries: 5
-
-  # app:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   container_name: oms-app
-  #   depends_on:
-  #     postgres:
-  #       condition: service_healthy
-  #     redis:
-  #       condition: service_healthy
-  #     kafka:
-  #       condition: service_healthy
-  #   ports:
-  #     - "8080:8080"
-  #   environment:
-  #     SPRING_PROFILES_ACTIVE: dev
-  #     DB_HOST: postgres
-  #     DB_PORT: 5432
-  #     DB_NAME: oms_db
-  #     DB_USERNAME: oms_user
-  #     DB_PASSWORD: oms_pass
-  #     REDIS_HOST: redis
-  #     REDIS_PORT: 6379
-  #     KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-  #     JWT_SECRET: productionSecretKeyThatShouldBeChangedInRealDeployment2026
+    networks:
+      - oms_network
 
 volumes:
   postgres_data:
+
+networks:
+  oms_network:
+    name: oms_network
+    driver: bridge
