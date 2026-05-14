@@ -199,3 +199,12 @@ com.semicolon.oms
 ## 📝 License
 
 This project is for educational and portfolio purposes.
+
+1. lấy docker hub token
+2. push project lên github
+3. set up github action
+4. đặt biến repo secret
+
+note: 
+Việc build code và push lên Docker Hub hoàn toàn được thực hiện trên các máy chủ (server) miễn phí của GitHub,
+Task: cần cấu hình github runner để chạy build; pull; push lên docker hub trên vps
