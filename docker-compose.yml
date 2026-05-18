@@ -92,7 +92,7 @@ services:
     image: grafana/grafana:latest
     container_name: oms-grafana
     ports:
-      - "3000:3000"
+      - "3008:3000"
     volumes:
       - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
     environment:
