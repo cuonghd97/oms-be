@@ -67,6 +67,41 @@ services:
     networks:
       - oms_network
 
+  loki:
+    image: grafana/loki:latest
+    container_name: oms-loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - oms_network
+
+  promtail:
+    image: grafana/promtail:latest
+    container_name: oms-promtail
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./monitoring/promtail/promtail-config.yaml:/etc/promtail/config.yml:ro
+    command: -config.file=/etc/promtail/config.yml
+    depends_on:
+      - loki
+    networks:
+      - oms_network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: oms-grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - loki
+    networks:
+      - oms_network
+
 volumes:
   postgres_data:
 

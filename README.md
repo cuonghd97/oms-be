@@ -225,3 +225,19 @@ Bước 3: Tận hưởng (Không cần sửa code hay Secret)
 
 Nhờ việc chúng ta đã setup hệ thống gọi nhau bằng tên nội bộ (DB_HOST=postgres, REDIS_HOST=redis), nên khi sang VPS mới bạn KHÔNG CẦN phải đổi bất kỳ Secret nào trên Github cả! Mọi thứ vẫn nguyên vẹn.
 Bạn chỉ cần push một commit mới, hoặc bấm Re-run pipeline, VPS mới sẽ tự động kéo code, tự build Image và tự chạy một cách hoàn hảo.
+
+grafana loki dùng để:
++ Thu thập log từ các service
++ Lưu trữ log
++ Tìm kiếm log
++ Phân tích log
++ Trực quan log
+
+promtail dùng để:
++ Đọc log từ container
++ Gửi log đến grafana loki
+
+Grafana dùng để:
++ Trực quan log
++ Tìm kiếm log
++ Phân tích log
